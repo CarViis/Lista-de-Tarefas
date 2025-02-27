@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tarefas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Lista de Tarefas</h1>
+    <div class="container">
+        <input
+          type="text"
+          id="inputTarefa"
+          placeholder="Adicione uma nova tarefa..."
+        />
+        <input type="date" id="inputData">
+        <input list="prioridades" id="inputPrioridade">
+        <datalist id="prioridades">
+            <option value="Baixa">
+            <option value="Média">
+            <option value="Alta">
+        </datalist>
+        <button type="button" id="btnAdicionar" onClick="funcaop()">
+          Adicionar Tarefa
+        </button>
+    <ul id="listaTarefas">
+        <li onclick="toggleTask(this)">
+            <span class="task">Estudar HTML</span> |
+            <span class="date">2025-02-27</span> |
+            <span class="priority">Alta</span>
+        </li>
+        <li onclick="toggleTask(this)">
+            <span class="task">Praticar CSS</span> |
+            <span class="date">2025-02-28</span> |
+            <span class="priority">Média</span>
+        </li>
+        <li onclick="toggleTask(this)">
+            <span class="task">Aprender JavaScript</span> |
+            <span class="date">2025-03-01</span> |
+            <span class="priority">Baixa</span>
+        </li>
+    </ul>
+    <button onclick="changeFontSize(1)">Aumentar Fonte</button>
+    <button onclick="changeFontSize(-1)">Diminuir Fonte</button>
+    <button onclick="toggleCompletedTasks()">Ver tarefas concluídas</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
