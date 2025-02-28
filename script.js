@@ -69,9 +69,12 @@ function toggleTask(task) {
     task.classList.toggle("done");
     task.setAttribute("data-de-conclusao", new Date().toISOString().split('T')[0]);
     if (task.classList.contains("done")) {
-        task.style.display = 'none';
+        if (toggled) {
+            task.style.display = 'none';
+        }
     }else{
         task.setAttribute("data-de-conclusao", "");
+        task.removeChild(task.querySelector(".tooltip"));
     }
 }
 
