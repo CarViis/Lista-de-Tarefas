@@ -4,6 +4,12 @@ function funcaop() {
     const prioridade = document.querySelector('#inputPrioridade').value;
 
     if (tarefa && data && prioridade) {
+        const today = new Date().toISOString().split('T')[0];
+        if (data < today) {
+            alert('A data de vencimento não pode ser no passado.');
+            return;
+        }
+
         const li = document.createElement('li');
         li.onclick = function() { toggleTask(this); };
 
