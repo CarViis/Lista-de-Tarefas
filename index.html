@@ -9,12 +9,15 @@
 <body>
     <h1>Lista de Tarefas</h1>
     <div class="container">
+        <label for="inputTarefa">Tarefa:</label>
         <input
           type="text"
           id="inputTarefa"
           placeholder="Adicione uma nova tarefa..."
         />
+        <label for="inputData">Data de Vencimento:</label>
         <input type="date" id="inputData">
+        <label for="inputPrioridade">Prioridade:</label>
         <input list="prioridades" id="inputPrioridade">
         <datalist id="prioridades">
             <option value="Baixa">
@@ -43,7 +46,7 @@
     </ul>
     <button onclick="changeFontSize(1)">Aumentar Fonte</button>
     <button onclick="changeFontSize(-1)">Diminuir Fonte</button>
-    <button onclick="toggleCompletedTasks()">Ver tarefas concluídas</button>
+    <button id="buttonCompletedTasks" onclick="toggleCompletedTasks()">Ver tarefas concluídas</button>
     </div>
     <script src="script.js"></script>
 </body>

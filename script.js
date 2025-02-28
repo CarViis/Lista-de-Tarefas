@@ -1,9 +1,10 @@
 function funcaop() {
-    const tarefa = document.getElementById('inputTarefa').value;
-    const data = document.getElementById('inputData').value;
-    const prioridade = document.getElementById('inputPrioridade').value;
+    const tarefa = document.querySelector('#inputTarefa').value;
+    const data = document.querySelector('#inputData').value;
+    const prioridade = document.querySelector('#inputPrioridade').value;
 
     if (tarefa && data && prioridade) {
+        const today = new Date().toISOString().split('T')[0];
         const li = document.createElement('li');
         li.onclick = function() { toggleTask(this); };
 
@@ -29,12 +30,16 @@ function funcaop() {
         li.appendChild(separator2);
         li.appendChild(prioritySpan);
 
-        const listaTarefas = document.getElementById('listaTarefas');
-        const items = listaTarefas.getElementsByTagName('li');
+        if (data < today) {
+            li.classList.add('expired');  
+        }
+        
+        const listaTarefas = document.querySelector('#listaTarefas');
+        const items = listaTarefas.querySelectorAll('li');
         let inserted = false;
 
         for (let i = 0; i < items.length; i++) {
-            const itemPriority = items[i].getElementsByClassName('priority')[0].textContent;
+            const itemPriority = items[i].querySelector('.priority').textContent;
             if (comparePriority(prioridade, itemPriority) < 0) {
                 listaTarefas.insertBefore(li, items[i]);
                 inserted = true;
@@ -47,9 +52,9 @@ function funcaop() {
         }
 
         // Limpa os campos
-        document.getElementById('inputTarefa').value = '';
-        document.getElementById('inputData').value = '';
-        document.getElementById('inputPrioridade').value = '';
+        document.querySelector('#inputTarefa').value = '';
+        document.querySelector('#inputData').value = '';
+        document.querySelector('#inputPrioridade').value = '';
     } else {
         alert('Por favor, preencha todos os campos.');
     }
@@ -60,12 +65,42 @@ function comparePriority(a, b) {
     return priorities[a] - priorities[b];
 }
 
-function toggleTask(task){
+function toggleTask(task) {
     task.classList.toggle("done");
+    task.setAttribute("data-de-conclusao", new Date().toISOString().split('T')[0]);
     if (task.classList.contains("done")) {
         task.style.display = 'none';
+    }else{
+        task.setAttribute("data-de-conclusao", "");
     }
 }
+
+function showConclusionDate(event) {
+    if (event.target.classList.contains("done")) {
+        const conclusionDate = event.target.getAttribute("data-de-conclusao");
+        const tooltip = document.createElement("span");
+        const data = event.target.querySelector('.date').textContent;
+        tooltip.className = "tooltip";
+        if (conclusionDate> data) {
+            tooltip.textContent = `Data de Conclusão: ${conclusionDate} (atrasada)`;
+        } else {
+            tooltip.textContent = `Data de Conclusão: ${conclusionDate} (no prazo)`;
+        }
+        event.target.appendChild(tooltip);
+    }
+}
+
+function hideConclusionDate(event) {
+    if (event.target.classList.contains("done")) {
+        const tooltip = event.target.querySelector(".tooltip");
+        if (tooltip) {
+            event.target.removeChild(tooltip);
+        }
+    }
+}
+
+document.addEventListener("mouseover", showConclusionDate);
+document.addEventListener("mouseout", hideConclusionDate);
 
 function changeFontSize(delta){
     let todosElem = document.querySelectorAll("*");
@@ -76,9 +111,37 @@ function changeFontSize(delta){
     });
 }
 
+let toggled = true;
 function toggleCompletedTasks() {
     const completedTasks = document.querySelectorAll('#listaTarefas li.done');
-    completedTasks.forEach(task => {
-        task.style.display = task.style.display === 'none' ? 'list-item' : 'none';
+    const button = document.querySelector('#buttonCompletedTasks');
+    if(toggled){
+        button.textContent = 'Ocultar Tarefas Concluídas';
+        completedTasks.forEach(task => {
+            task.style.display = 'list-item';
+        });
+        toggled = false;
+    }else{
+        button.textContent = 'Ver Tarefas Concluídas';
+        completedTasks.forEach(task => {
+            task.style.display = 'none';
+        });
+        toggled = true;
+    }
+}
+
+function checkExpiredTasks() {
+    const today = new Date().toISOString().split('T')[0];
+    const tasks = document.querySelectorAll('#listaTarefas li');
+    tasks.forEach(task => {
+        const date = task.querySelector('.date').textContent;
+        if (date < today) {
+            task.classList.add('expired');
+        } else {
+            task.classList.remove('expired');
+        }
     });
 }
+
+// Call checkExpiredTasks on page load
+document.addEventListener('DOMContentLoaded', checkExpiredTasks);
