@@ -65,12 +65,42 @@ function comparePriority(a, b) {
     return priorities[a] - priorities[b];
 }
 
-function toggleTask(task){
+function toggleTask(task) {
     task.classList.toggle("done");
+    task.setAttribute("data-de-conclusao", new Date().toISOString().split('T')[0]);
     if (task.classList.contains("done")) {
         task.style.display = 'none';
+    }else{
+        task.setAttribute("data-de-conclusao", "");
     }
 }
+
+function showConclusionDate(event) {
+    if (event.target.classList.contains("done")) {
+        const conclusionDate = event.target.getAttribute("data-de-conclusao");
+        const tooltip = document.createElement("span");
+        const data = event.target.querySelector('.date').textContent;
+        tooltip.className = "tooltip";
+        if (conclusionDate> data) {
+            tooltip.textContent = `Data de Conclusão: ${conclusionDate} (atrasada)`;
+        } else {
+            tooltip.textContent = `Data de Conclusão: ${conclusionDate} (no prazo)`;
+        }
+        event.target.appendChild(tooltip);
+    }
+}
+
+function hideConclusionDate(event) {
+    if (event.target.classList.contains("done")) {
+        const tooltip = event.target.querySelector(".tooltip");
+        if (tooltip) {
+            event.target.removeChild(tooltip);
+        }
+    }
+}
+
+document.addEventListener("mouseover", showConclusionDate);
+document.addEventListener("mouseout", hideConclusionDate);
 
 function changeFontSize(delta){
     let todosElem = document.querySelectorAll("*");
@@ -81,11 +111,23 @@ function changeFontSize(delta){
     });
 }
 
+let toggled = true;
 function toggleCompletedTasks() {
     const completedTasks = document.querySelectorAll('#listaTarefas li.done');
-    completedTasks.forEach(task => {
-        task.style.display = task.style.display === 'none' ? 'list-item' : 'none';
-    });
+    const button = document.querySelector('#buttonCompletedTasks');
+    if(toggled){
+        button.textContent = 'Ocultar Tarefas Concluídas';
+        completedTasks.forEach(task => {
+            task.style.display = 'list-item';
+        });
+        toggled = false;
+    }else{
+        button.textContent = 'Ver Tarefas Concluídas';
+        completedTasks.forEach(task => {
+            task.style.display = 'none';
+        });
+        toggled = true;
+    }
 }
 
 function checkExpiredTasks() {
