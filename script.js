@@ -1,7 +1,7 @@
 function funcaop() {
-    const tarefa = document.getElementById('inputTarefa').value;
-    const data = document.getElementById('inputData').value;
-    const prioridade = document.getElementById('inputPrioridade').value;
+    const tarefa = document.querySelector('#inputTarefa').value;
+    const data = document.querySelector('#inputData').value;
+    const prioridade = document.querySelector('#inputPrioridade').value;
 
     if (tarefa && data && prioridade) {
         const li = document.createElement('li');
@@ -29,12 +29,12 @@ function funcaop() {
         li.appendChild(separator2);
         li.appendChild(prioritySpan);
 
-        const listaTarefas = document.getElementById('listaTarefas');
-        const items = listaTarefas.getElementsByTagName('li');
+        const listaTarefas = document.querySelector('#listaTarefas');
+        const items = listaTarefas.querySelectorAll('li');
         let inserted = false;
 
         for (let i = 0; i < items.length; i++) {
-            const itemPriority = items[i].getElementsByClassName('priority')[0].textContent;
+            const itemPriority = items[i].querySelector('.priority').textContent;
             if (comparePriority(prioridade, itemPriority) < 0) {
                 listaTarefas.insertBefore(li, items[i]);
                 inserted = true;
@@ -47,9 +47,9 @@ function funcaop() {
         }
 
         // Limpa os campos
-        document.getElementById('inputTarefa').value = '';
-        document.getElementById('inputData').value = '';
-        document.getElementById('inputPrioridade').value = '';
+        document.querySelector('#inputTarefa').value = '';
+        document.querySelector('#inputData').value = '';
+        document.querySelector('#inputPrioridade').value = '';
     } else {
         alert('Por favor, preencha todos os campos.');
     }
