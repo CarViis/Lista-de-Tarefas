@@ -5,11 +5,6 @@ function funcaop() {
 
     if (tarefa && data && prioridade) {
         const today = new Date().toISOString().split('T')[0];
-        if (data < today) {
-            alert('A data de vencimento não pode ser no passado.');
-            return;
-        }
-
         const li = document.createElement('li');
         li.onclick = function() { toggleTask(this); };
 
@@ -35,6 +30,10 @@ function funcaop() {
         li.appendChild(separator2);
         li.appendChild(prioritySpan);
 
+        if (data < today) {
+            li.classList.add('expired');  
+        }
+        
         const listaTarefas = document.querySelector('#listaTarefas');
         const items = listaTarefas.querySelectorAll('li');
         let inserted = false;
@@ -88,3 +87,19 @@ function toggleCompletedTasks() {
         task.style.display = task.style.display === 'none' ? 'list-item' : 'none';
     });
 }
+
+function checkExpiredTasks() {
+    const today = new Date().toISOString().split('T')[0];
+    const tasks = document.querySelectorAll('#listaTarefas li');
+    tasks.forEach(task => {
+        const date = task.querySelector('.date').textContent;
+        if (date < today) {
+            task.classList.add('expired');
+        } else {
+            task.classList.remove('expired');
+        }
+    });
+}
+
+// Call checkExpiredTasks on page load
+document.addEventListener('DOMContentLoaded', checkExpiredTasks);
